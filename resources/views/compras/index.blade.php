@@ -8,7 +8,6 @@
     <a href="{{ route('relatorios.compras') }}" class="btn btn-secondary">Ver Relatório</a>
 </div>
 
-{{-- mensagens --}}
 @if(session('success'))
   <div class="alert alert-success">{{ session('success') }}</div>
 @endif
@@ -37,7 +36,6 @@
   <tbody>
     @forelse ($compras as $c)
       @php
-        // soma dos itens da compra: quantidade * preco_unitario
         $total = $c->itens->sum(function($it){
           return (float)$it->quantidade * (float)$it->preco_unitario;
         });
@@ -47,7 +45,6 @@
         <td>{{ $c->fornecedor?->nome ?? '—' }}</td>
         <td>{{ number_format($total, 2, ',', '.') }}</td>
         <td>
-          {{-- Excluir (reverte estoque, conforme seu controller) --}}
           <form action="{{ route('compras.destroy', $c->id) }}" method="POST" style="display:inline-block"
                 onsubmit="return confirm('Excluir esta compra? O estoque será revertido.');">
             @csrf
