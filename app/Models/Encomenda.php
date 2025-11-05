@@ -19,5 +19,4 @@ class Encomenda extends Model
     {
         return $this->hasMany(\App\Models\ItemEncomenda::class, 'encomenda_id');
     }
-
 }
