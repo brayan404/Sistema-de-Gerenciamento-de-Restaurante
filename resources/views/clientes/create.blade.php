@@ -23,7 +23,7 @@
   <label>Telefone</label>
   <input type="text" name="telefone" value="{{ old('telefone') }}">
 
-  <label>Email</label>  {{-- ✅ novo --}}
+  <label>Email</label>
   <input type="email" name="email" placeholder="exemplo@email.com" value="{{ old('email') }}" >
 
   <button class="btn btn-dark" type="submit">Salvar</button>
