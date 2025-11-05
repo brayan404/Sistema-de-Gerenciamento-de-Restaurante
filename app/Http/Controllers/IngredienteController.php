@@ -23,7 +23,6 @@ class IngredienteController extends Controller
         $request->validate([
             'nome'    => 'required|string|max:100',
             'unidade' => 'required|string|max:20',
-            // estoque opcional (se quiser permitir cadastrar um valor inicial)
             'estoque' => 'nullable|numeric|min:0',
         ]);
 
@@ -32,7 +31,6 @@ class IngredienteController extends Controller
             $dados['estoque'] = (float)$request->estoque;
         }
 
-        // NUNCA receber preco_unitario aqui (preço é atualizado pelas compras)
         Ingrediente::create($dados);
 
         return redirect()->route('ingredientes.index')->with('success', 'Ingrediente cadastrado!');
@@ -56,7 +54,6 @@ class IngredienteController extends Controller
             $dados['estoque'] = (float)$request->estoque;
         }
 
-        // NÃO aceitar preco_unitario via edição
         $ingrediente->update($dados);
 
         return redirect()->route('ingredientes.index')->with('success', 'Ingrediente atualizado!');
