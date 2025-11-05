@@ -7,7 +7,6 @@
   <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
-{{-- Resumo de custos --}}
 <div style="margin:10px 0; padding:10px; border:1px solid #ddd; border-radius:8px;">
   <strong>Preço de venda:</strong>
   R$ {{ number_format($prato->preco_unitario, 2, ',', '.') }}
@@ -21,7 +20,6 @@
 
 <hr style="margin:15px 0;">
 
-{{-- Form de adição de ingrediente --}}
 <h3>Adicionar Ingrediente</h3>
 <form action="{{ route('pratos.composicao.store', $prato->id) }}" method="POST">
     @csrf
@@ -47,9 +45,7 @@
 
 <hr style="margin:15px 0;">
 
-{{-- Tabela de composição atual --}}
 <h3>Ingredientes do Prato</h3>
-
 <table>
   <thead>
     <tr>
