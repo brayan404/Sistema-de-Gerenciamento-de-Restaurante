@@ -22,11 +22,8 @@
   <label>Unidade (ex.: kg, L, un)</label>
   <input type="text" name="unidade" value="{{ old('unidade') }}" required>
 
-  {{-- Se quiser permitir informar um estoque inicial, deixe este campo; caso contrário, remova --}}
   <label>Estoque inicial (opcional)</label>
   <input type="number" step="0.001" min="0" name="estoque" value="{{ old('estoque') }}">
-
-  {{-- Preço de referência é exibido apenas depois das compras, não é editável aqui --}}
 
   <button class="btn btn-dark" type="submit">Salvar</button>
   <a href="{{ route('ingredientes.index') }}" class="btn btn-secondary">Voltar</a>
