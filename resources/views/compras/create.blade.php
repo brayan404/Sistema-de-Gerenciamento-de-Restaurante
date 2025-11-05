@@ -83,7 +83,6 @@
 
 </form>
 
-{{-- JS simples para clonar/remover linhas e manter os índices corretos --}}
 <script>
 (function() {
   const tbody = document.querySelector('#tabela-itens tbody');
@@ -97,7 +96,6 @@
           el.setAttribute('name', newName);
         }
       });
-      // habilita botão remover exceto se for a única linha
       const btnRemove = tr.querySelector('.btn-remove');
       if (btnRemove) btnRemove.disabled = (tbody.querySelectorAll('tr.item-row').length === 1);
     });
@@ -120,7 +118,6 @@
     if (e.target.classList.contains('btn-add')) {
       const tr = e.target.closest('tr');
       const clone = tr.cloneNode(true);
-      // limpar valores
       clone.querySelectorAll('input').forEach(i => i.value = '');
       const sel = clone.querySelector('select.sel-ingrediente');
       sel.selectedIndex = 0;
@@ -137,7 +134,6 @@
     }
   });
 
-  // unidade da primeira linha
   updateUnidade(tbody.querySelector('tr.item-row'));
 })();
 </script>
