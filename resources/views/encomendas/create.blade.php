@@ -3,14 +3,12 @@
 @section('content')
 <h2>Nova Encomenda</h2>
 
-{{-- ✅ Mensagem curta (alert vermelho) --}}
 @if (session('error'))
   <div class="alert alert-danger" style="margin-bottom:8px;">
     {{ session('error') }}
   </div>
 @endif
 
-{{-- ✅ Lista dos erros detalhados --}}
 @if ($errors->any())
   <div class="alert alert-danger">
     <ul style="margin:0; padding-left:18px;">
@@ -71,7 +69,6 @@
             </tr>
         </thead>
         <tbody>
-            {{-- linhas dinâmicas aqui --}}
         </tbody>
         <tfoot>
             <tr>
@@ -88,7 +85,6 @@
     </div>
 </form>
 
-{{-- Template escondido para clonar linhas --}}
 <template id="tpl-item">
     <tr>
         <td>
@@ -125,22 +121,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const end  = document.getElementById('endereco_cliente');
 
   function toggleBalcao() {
-    const usandoBalcao = !sel.value; // vazio = balcão
+    const usandoBalcao = !sel.value;
     hint.style.display  = usandoBalcao ? 'block' : 'none';
     if (bloco) bloco.style.display = usandoBalcao ? 'block' : 'none';
 
-    // quando for balcão, exigir endereço (nome opcional)
     if (end)  end.required  = usandoBalcao;
     if (nome) nome.required = false;
   }
 
   sel.addEventListener('change', toggleBalcao);
-  toggleBalcao(); // estado inicial
+  toggleBalcao();
 });
 </script>
 
 <script>
-// JS simples e sem dependências — compatível com o restante do projeto
 document.addEventListener('DOMContentLoaded', () => {
     const tbody = document.querySelector('#tabela-itens tbody');
     const tpl   = document.querySelector('#tpl-item').content;
@@ -150,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addRow() {
         const clone = document.importNode(tpl, true);
-        // renomeia os names com índice único
         clone.querySelectorAll('[name]').forEach(el => {
             el.name = el.name.replace('IDX', idx);
         });
@@ -193,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnAdd.addEventListener('click', addRow);
 
-    // começa com 1 linha
     addRow();
 });
 </script>
