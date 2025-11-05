@@ -12,7 +12,6 @@ use App\Models\Ingrediente;
 
 class EncomendaController extends Controller
 {
-    // ====== LISTA ======
     public function index()
     {
         $encomendas = Encomenda::query()
@@ -28,7 +27,6 @@ class EncomendaController extends Controller
         return view('encomendas.index', compact('encomendas'));
     }
 
-    // ====== FORM NOVA ======
     public function create()
     {
         $clientes = Cliente::whereRaw('LOWER(nome) <> LOWER(?)', ['Cliente de Balcão'])
@@ -40,7 +38,6 @@ class EncomendaController extends Controller
         return view('encomendas.create', compact('clientes','pratos'));
     }
 
-    // ====== UTIL: consolida consumo por ingrediente ======
     private function consumoPorIngrediente(array $itens): array
     {
         $consumo = [];
@@ -54,7 +51,6 @@ class EncomendaController extends Controller
         return $consumo;
     }
 
-    // ====== SALVAR ======
     public function store(Request $request)
     {
         $request->validate([
@@ -96,7 +92,6 @@ class EncomendaController extends Controller
                 ->withInput();
         }
 
-        // ====== Persistência + baixa no estoque ======
         DB::transaction(function () use ($request, $consumo, $clienteId) {
             if (empty($request->cliente_id)) {
                 $clienteBalcao = Cliente::find($clienteId);
@@ -138,7 +133,6 @@ class EncomendaController extends Controller
             ->with('success', 'Encomenda registrada e estoque atualizado!');
     }
 
-    // ====== CLIENTE DE BALCÃO ======
     private function getClienteBalcaoId(): int
     {
         $balcao = Cliente::firstOrCreate(
@@ -149,7 +143,6 @@ class EncomendaController extends Controller
         return (int) $balcao->id;
     }
 
-    // ====== EXCLUIR ======
     public function destroy(Encomenda $encomenda)
     {
         DB::transaction(function () use ($encomenda) {
@@ -167,13 +160,12 @@ class EncomendaController extends Controller
                     ->update(['estoque' => DB::raw('estoque + ' . (float)$qtd)]);
             }
 
-            $encomenda->delete(); // ON DELETE CASCADE
+            $encomenda->delete();
         });
 
         return redirect()->route('encomendas.index')->with('success', 'Encomenda cancelada e estoque revertido.');
     }
 
-    // ====== RELATÓRIO ======
     public function relatorio()
     {
         $encomendas = Encomenda::query()
