@@ -33,7 +33,6 @@
                 <td>{{ $prato->nome }}</td>
                 <td>{{ number_format($prato->preco_unitario, 2, ',', '.') }}</td>
                 <td>
-                    {{-- NOVO: botão para montagem da composição do prato --}}
                     <a href="{{ route('pratos.composicao', $prato->id) }}" class="btn btn-dark">Composição</a>
 
                     <a href="{{ route('pratos.edit', $prato->id) }}" class="btn btn-warning">Editar</a>
