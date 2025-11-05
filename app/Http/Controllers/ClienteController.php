@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
-use App\Models\Encomenda; // ✅ para checar vínculos
+use App\Models\Encomenda;
 
 class ClienteController extends Controller
 {
@@ -55,27 +55,23 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         try {
-            // 🔒 1) Não permitir excluir o “Cliente de Balcão”
             if (strcasecmp($cliente->nome, 'Cliente de Balcão') === 0) {
                 return redirect()->route('clientes.index')
                     ->with('error', 'O cliente padrão de balcão não pode ser excluído.');
             }
 
-            // 🔒 2) Checar se há encomendas vinculadas (mensagem amigável)
             $temEncomendas = Encomenda::where('cliente_id', $cliente->id)->exists();
             if ($temEncomendas) {
                 return redirect()->route('clientes.index')
                     ->with('error', 'Não é possível excluir este cliente porque ele possui encomendas registradas.');
             }
 
-            // ✅ 3) Pode excluir
             $cliente->delete();
 
             return redirect()->route('clientes.index')
                 ->with('success', 'Cliente excluído com sucesso!');
 
         } catch (\Illuminate\Database\QueryException $e) {
-            // FK ou outros erros SQL
             if ($e->getCode() == '23000') {
                 return redirect()->route('clientes.index')
                     ->with('error', 'Não é possível excluir este cliente porque ele possui encomendas registradas.');
