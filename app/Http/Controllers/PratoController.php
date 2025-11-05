@@ -25,7 +25,7 @@ class PratoController extends Controller
 
     if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
         $dir = public_path('img/pratos');
-        File::ensureDirectoryExists($dir, 0775, true); // cria se não existir
+        File::ensureDirectoryExists($dir, 0775, true);
 
         $nomeArquivo = time().'.'.$request->file('imagem')->extension();
         $request->file('imagem')->move($dir, $nomeArquivo);
