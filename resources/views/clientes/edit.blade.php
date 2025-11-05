@@ -24,7 +24,7 @@
   <label>Telefone</label>
   <input type="text" name="telefone" value="{{ old('telefone', $cliente->telefone) }}">
 
-  <label>Email</label>  {{-- ✅ novo --}}
+  <label>Email</label>
   <input type="email" name="email" value="{{ old('email', $cliente->email) }}">
 
   <button class="btn btn-dark" type="submit">Salvar</button>
