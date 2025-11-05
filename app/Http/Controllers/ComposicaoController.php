@@ -9,12 +9,10 @@ use App\Models\Composicao;
 
 class ComposicaoController extends Controller
 {
-    // Tela de composição por prato
     public function show(Prato $prato)
     {
         $ingredientes = Ingrediente::all();
 
-        // custo total do prato com base no preço unitário de cada ingrediente
         $custoTotal = $prato->composicoes->sum(function ($c) {
             $preco = $c->ingrediente?->preco_unitario ?? 0;
             return $c->quantidade * $preco;
@@ -23,7 +21,6 @@ class ComposicaoController extends Controller
         return view('pratos.composicao', compact('prato', 'ingredientes', 'custoTotal'));
     }
 
-    // Adiciona um ingrediente à composição
     public function store(Request $request, Prato $prato)
     {
         $request->validate([
@@ -41,10 +38,8 @@ class ComposicaoController extends Controller
             ->with('success', 'Ingrediente adicionado à composição!');
     }
 
-    // Remove um item da composição
     public function destroy(Prato $prato, Composicao $composicao)
     {
-        // garante que pertence ao prato
         if ($composicao->prato_id === $prato->id) {
             $composicao->delete();
         }
