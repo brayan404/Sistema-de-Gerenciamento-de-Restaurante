@@ -9,7 +9,6 @@ class ItensCompra extends Model
     protected $table = 'itens_compra';
     public $timestamps = false;
 
-    // Se sua coluna é valor_unitario, troque o nome aqui também
     protected $fillable = ['compra_id','ingrediente_id','quantidade','preco_unitario'];
 
     public function compra()      { return $this->belongsTo(Compra::class, 'compra_id'); }
