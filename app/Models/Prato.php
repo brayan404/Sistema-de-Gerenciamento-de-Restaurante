@@ -19,5 +19,4 @@ class Prato extends Model
     {
         return $this->hasMany(\App\Models\Composicao::class, 'prato_id');
     }
-
 }
