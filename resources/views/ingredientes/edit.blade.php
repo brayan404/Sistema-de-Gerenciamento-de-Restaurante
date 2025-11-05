@@ -23,7 +23,6 @@
   <label>Unidade (ex.: kg, L, un)</label>
   <input type="text" name="unidade" value="{{ old('unidade', $ingrediente->unidade) }}" required>
 
-  {{-- Se quiser permitir ajuste manual de estoque, mantenha; se não, remova --}}
   <label>Estoque</label>
   <input type="number" step="0.001" min="0" name="estoque" value="{{ old('estoque', $ingrediente->estoque) }}">
 
