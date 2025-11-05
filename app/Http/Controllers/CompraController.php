@@ -13,7 +13,6 @@ class CompraController extends Controller
 {
     public function index()
     {
-        // carrega a compra com os itens e o fornecedor
         $compras = Compra::with(['fornecedor', 'itens.ingrediente'])
                     ->orderBy('data_compra','desc')
                     ->get();
@@ -41,14 +40,12 @@ class CompraController extends Controller
         ]);
 
         DB::transaction(function() use ($request) {
-            // cria a compra
             $compra = Compra::create([
                 'fornecedor_id' => (int)$request->fornecedor_id,
                 'data_compra'   => $request->data_compra,
                 'nota_fiscal'   => $request->nota_fiscal,
             ]);
 
-            // para cada item: grava e atualiza estoque + preço padrão do ingrediente
             foreach ($request->itens as $it) {
                 ItensCompra::create([
                     'compra_id'      => $compra->id,
@@ -59,7 +56,7 @@ class CompraController extends Controller
 
                 Ingrediente::where('id', (int)$it['ingrediente_id'])->update([
                     'estoque'        => DB::raw('estoque + ' . (float)$it['quantidade']),
-                    'preco_unitario' => (float)$it['preco_unitario'], // ← preço de referência atualizado pela última compra
+                    'preco_unitario' => (float)$it['preco_unitario'],
                 ]);
 
             }
@@ -71,14 +68,14 @@ class CompraController extends Controller
     public function destroy(Compra $compra)
     {
         DB::transaction(function() use ($compra) {
-            $compra->load('itens'); // itens: ingrediente_id, quantidade
+            $compra->load('itens');
 
             foreach ($compra->itens as $item) {
                 Ingrediente::where('id', $item->ingrediente_id)
                     ->update(['estoque' => DB::raw('estoque - ' . (float)$item->quantidade)]);
             }
 
-            $compra->delete(); // ON DELETE CASCADE vai remover itens_compra
+            $compra->delete();
         });
 
         return redirect()->route('compras.index')->with('success', 'Compra cancelada e estoque revertido.');
@@ -86,7 +83,6 @@ class CompraController extends Controller
 
     public function relatorio()
     {
-        // 1 linha por compra, com todos os itens dentro
         $compras = \App\Models\Compra::with(['fornecedor', 'itens.ingrediente'])
             ->orderByDesc('data_compra')
             ->get();
