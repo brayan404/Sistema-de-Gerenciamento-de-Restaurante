@@ -23,7 +23,7 @@
     <tbody>
         @forelse ($ingredientes as $ingrediente)
             @php
-                $baixo = ($ingrediente->estoque ?? 0) < 0.100; // menos de 0,1 unidade
+                $baixo = ($ingrediente->estoque ?? 0) < 0.100;
             @endphp
             <tr>
                 <td>{{ $ingrediente->nome }}</td>
