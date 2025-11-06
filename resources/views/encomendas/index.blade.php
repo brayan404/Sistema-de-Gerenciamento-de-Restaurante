@@ -17,7 +17,7 @@
         <tr>
             <th>Cliente</th>
             <th>Data</th>
-            <th style="text-align:right;">Valor Total (R$)</th>
+            <th>Valor Total (R$)</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -26,21 +26,27 @@
 
         @forelse ($encomendas as $e)
             @php
-                $nomeCliente = trim($e->cliente?->nome ?? '');
-                $isBalcao = strcasecmp($nomeCliente, 'Cliente de Balcão') === 0;
-                $total = $e->itens->sum(fn($item) => $item->quantidade * $item->preco_unitario);
+                // Nome para exibir: cliente real -> nome_cliente -> "Cliente de Balcão"
+                $displayNome = $e->cliente->nome
+                    ?? ($e->nome_cliente ?: 'Cliente de Balcão');
+
+                // É balcão se NÃO há cliente relacionado
+                $isBalcao = is_null($e->cliente_id);
+
+                // Total da encomenda
+                $total = $e->itens->sum(fn($item) => ($item->quantidade ?? 0) * ($item->preco_unitario ?? 0));
                 $totalGeral += $total;
             @endphp
             <tr>
                 <td>
                     @if($isBalcao)
-                        <span style="color:#888;">{{ $nomeCliente }}</span>
+                        <span style="color:#888;">{{ $displayNome }}</span>
                         <span style="
                             margin-left:6px; padding:2px 6px; font-size:12px;
                             background:#eee; color:#555; border:1px solid #ddd; border-radius:4px;
                         ">balcão</span>
                     @else
-                        {{ $nomeCliente }}
+                        {{ $displayNome }}
                     @endif
                 </td>
                 <td>{{ \Illuminate\Support\Carbon::parse($e->data_encomenda)->format('d/m/Y') }}</td>
