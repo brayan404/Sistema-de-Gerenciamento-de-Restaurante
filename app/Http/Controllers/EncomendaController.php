@@ -71,8 +71,6 @@ class EncomendaController extends Controller
             ]);
         }
 
-        $clienteId = $request->cliente_id ?: $this->getClienteBalcaoId();
-
         $consumo = $this->consumoPorIngrediente($request->itens);
 
         $faltas = [];
@@ -92,26 +90,16 @@ class EncomendaController extends Controller
                 ->withInput();
         }
 
-        DB::transaction(function () use ($request, $consumo, $clienteId) {
-            if (empty($request->cliente_id)) {
-                $clienteBalcao = Cliente::find($clienteId);
-                $atualizacoes = [];
+        DB::transaction(function () use ($request, $consumo) {
 
-                if ($request->filled('endereco_cliente')) {
-                    $atualizacoes['endereco'] = $request->endereco_cliente;
-                }
-                if ($request->filled('telefone_cliente')) {
-                    $atualizacoes['telefone'] = $request->telefone_cliente;
-                }
-
-                if (!empty($atualizacoes)) {
-                    $clienteBalcao->update($atualizacoes);
-                }
-            }
+            $temCliente = $request->filled('cliente_id');
 
             $encomenda = Encomenda::create([
-                'cliente_id'     => $clienteId,
-                'data_encomenda' => $request->data_encomenda,
+                'cliente_id'       => $temCliente ? $request->cliente_id : null,
+                'data_encomenda'   => $request->data_encomenda,
+                'nome_cliente'     => $temCliente ? null : ($request->nome_cliente ?: null),
+                'endereco_cliente' => $temCliente ? null : $request->endereco_cliente,
+                'telefone_cliente' => $temCliente ? null : ($request->telefone_cliente ?: null),
             ]);
 
             foreach ($request->itens as $it) {
@@ -131,16 +119,6 @@ class EncomendaController extends Controller
 
         return redirect()->route('encomendas.index')
             ->with('success', 'Encomenda registrada e estoque atualizado!');
-    }
-
-    private function getClienteBalcaoId(): int
-    {
-        $balcao = Cliente::firstOrCreate(
-            ['nome' => 'Cliente de Balcão'],
-            ['endereco' => 'Não informado', 'telefone' => null, 'email' => null]
-        );
-
-        return (int) $balcao->id;
     }
 
     public function destroy(Encomenda $encomenda)
